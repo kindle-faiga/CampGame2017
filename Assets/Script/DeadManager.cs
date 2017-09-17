@@ -5,12 +5,23 @@ using UnityEngine.SceneManagement;
 
 public class DeadManager : MonoBehaviour 
 {
+    [SerializeField]
+    private bool isWall = false;
+
 	private void OnTriggerEnter2D(Collider2D other)
 	{
         if(other.tag.Equals("Player"))
         {
-            other.GetComponent<PlayerManager>().Dead();
-            StartCoroutine(WaitForJump());
+            if (!isWall)
+            {
+				other.GetComponent<PlayerManager>().Dead();
+				StartCoroutine(WaitForJump());
+            }
+            else if(other.name.Equals(transform.name))
+            {
+                other.GetComponent<PlayerManager>().Dead();
+                StartCoroutine(WaitForJump());
+            }
         }
 	}
 
