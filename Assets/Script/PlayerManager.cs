@@ -31,6 +31,7 @@ public class PlayerManager : MonoBehaviour
     private bool isReleased = false;
     private bool isCharge = false;
     private bool isDead = false;
+    private bool isEnd = false;
 
     private void Start()
     {
@@ -47,6 +48,7 @@ public class PlayerManager : MonoBehaviour
         {
             isDead = true;
             spriteRenderer.sprite = sprite[4];
+            StartCoroutine(WaitForDead());
             GetComponent<BoxCollider2D>().enabled = false;
         }
     }
@@ -134,7 +136,15 @@ public class PlayerManager : MonoBehaviour
     {
         if (isDead)
         {
-            rb.velocity = new Vector2(rb.velocity.x * 0.1f, rb.velocity.y * 0.1f);
+            if (isEnd)
+            {
+                rb.velocity = new Vector2(rb.velocity.x * 2.0f, rb.velocity.y * 2.0f);
+            }
+            else
+            {
+                rb.velocity = new Vector2(rb.velocity.x * 0.1f, rb.velocity.y * 0.1f);
+            }
+            transform.eulerAngles += new Vector3(0, 0, 1.0f);
         }
         else
         {
@@ -195,5 +205,11 @@ public class PlayerManager : MonoBehaviour
 		spriteRenderer.sprite = sprite[3];
 		yield return new WaitForSeconds(0.25f);
         spriteRenderer.sprite = sprite[0];
+	}
+
+	IEnumerator WaitForDead()
+	{
+		yield return new WaitForSeconds(1.5f);
+        isEnd = true;
 	}
 }

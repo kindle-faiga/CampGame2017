@@ -10,6 +10,7 @@ public class DeadManager : MonoBehaviour
         if(other.tag.Equals("Player"))
         {
             other.GetComponent<PlayerManager>().Dead();
+            StartCoroutine(WaitForJump());
         }
 	}
 
