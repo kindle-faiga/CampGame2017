@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     private GameObject tapObjectInverse;
     private PlayerManager playerManager;
     private PlayerManager playerManagerInverse;
+    private List<MobManager> mobManagers = new List<MobManager>();
     private bool isOtherDead = false;
 
     private void Start()
@@ -17,6 +18,11 @@ public class GameManager : MonoBehaviour
         tapObjectInverse = GameObject.Find("Tap_Fields/Player_Inverse");
         playerManager = GameObject.Find("Players/Player").GetComponent<PlayerManager>();
         playerManagerInverse = GameObject.Find("Players/Player_Inverse").GetComponent<PlayerManager>();
+
+        foreach (GameObject m in GameObject.FindGameObjectsWithTag("Mob"))
+        {
+            mobManagers.Add(m.GetComponent<MobManager>());
+        }
     }
 
 	//タッチ、タップの取得（変更を禁ず）
@@ -65,6 +71,11 @@ public class GameManager : MonoBehaviour
     {
         playerManager.SetStart();
         playerManagerInverse.SetStart();
+
+        foreach(MobManager m in mobManagers)
+        {
+            m.SetStart();
+        }
     }
 
     private void Update()

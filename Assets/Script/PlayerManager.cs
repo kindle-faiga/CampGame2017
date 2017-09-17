@@ -78,7 +78,10 @@ public class PlayerManager : MonoBehaviour
         playerStatus = PlayerStatus.Release;
         speed = maxSpeed;
 
-        if(!isStart)rb.isKinematic = true;
+        if (!isStart)
+        {
+            rb.isKinematic = true;
+        }
     }
 
 	//タッチ、タップの取得（変更を禁ず）
