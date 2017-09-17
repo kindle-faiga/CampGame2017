@@ -134,5 +134,6 @@ public class MobManager : MonoBehaviour
 		spriteRenderer.sprite = sprite[1];
         yield return new WaitForSeconds(0.35f);
         mobStatus = MobStatus.Release;
+        spriteRenderer.sprite = sprite[2];
 	}
 }
