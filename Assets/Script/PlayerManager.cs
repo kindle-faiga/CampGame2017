@@ -49,7 +49,8 @@ public class PlayerManager : MonoBehaviour
             isDead = true;
             spriteRenderer.sprite = sprite[4];
             StartCoroutine(WaitForDead());
-            GetComponent<BoxCollider2D>().enabled = false;
+            //GetComponent<BoxCollider2D>().enabled = false;
+            GetComponent<BoxCollider2D>().isTrigger = true;
         }
     }
 
