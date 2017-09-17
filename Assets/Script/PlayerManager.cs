@@ -17,20 +17,38 @@ public class PlayerManager : MonoBehaviour
     private float speed = 0;
     [SerializeField]
     private KeyCode jumpKey;
+    [SerializeField]
+    private Sprite[] sprite;
 
     private Rigidbody2D rb;
     private GameObject tapObject;
     private GameObject mainCamera;
+    private BlockCreater blockCreater;
+    private SpriteRenderer spriteRenderer;
     private float depth = 10.0f;
     private bool isJump = false;
     private bool isGround = true;
     private bool isReleased = false;
+    private bool isCharge = false;
+    private bool isDead = false;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         tapObject = GameObject.Find("Tap_Fields/" + transform.name);
+        blockCreater = GameObject.Find("Field/Blocks").GetComponent<BlockCreater>();
         mainCamera = GameObject.Find("Main Camera");
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    public void Dead()
+    {
+        if (!isDead)
+        {
+            isDead = true;
+            spriteRenderer.sprite = sprite[4];
+            GetComponent<BoxCollider2D>().enabled = false;
+        }
     }
 
 	void OnCollisionEnter2D(Collision2D col)
@@ -41,8 +59,10 @@ public class PlayerManager : MonoBehaviour
             isReleased = false;
             speed = 0;
             iTween.MoveTo(mainCamera, iTween.Hash("x", transform.position.x + 5.0f, "time", 2.0f));
+            blockCreater.CreateBlock();
+            StartCoroutine(WaitForStand());
         }
-	}
+    }
 
     private bool GetTouchAction(TouchPhase phase)
     {
@@ -75,85 +95,105 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        if (!isJump && isGround)
+        if (!isDead)
         {
-#if UNITY_EDITOR
-            if (Input.GetKeyDown(jumpKey))
+            if (!isJump && !isCharge && isGround)
             {
-                isJump = true;
-                isGround = false;
-                speed = defaultSpeed;
-            }
+#if UNITY_EDITOR
+                if (Input.GetKeyDown(jumpKey))
+                {
+                    StartCoroutine(WaitForJump());
+                }
 #endif
 #if UNITY_ANDROID
-            if(GetTouchAction(TouchPhase.Began))
-            {
-                isJump = true;
-				isGround = false; 
-                speed = defaultSpeed;
-			}
+                if (GetTouchAction(TouchPhase.Began))
+                {
+                    StartCoroutine(WaitForJump());
+                }
 #endif
-        }
+            }
 
-        if (!isGround)
-        {
 #if UNITY_EDITOR
             if (Input.GetKeyUp(jumpKey))
             {
                 isReleased = true;
+                if (!isCharge) spriteRenderer.sprite = sprite[2];
             }
 #endif
 #if UNITY_ANDROID
             if (GetTouchAction(TouchPhase.Ended))
             {
                 isReleased = true;
+                if (!isCharge) spriteRenderer.sprite = sprite[2];
             }
 #endif
         }
-	}
+    }
 
     private void FixedUpdate()
     {
-        if(isJump)
+        if (isDead)
         {
-            rb.AddForce(new Vector2(0, inverse ? -jumpForce : jumpForce));
-            //rb.AddForce(new Vector2(jumpForce, 0));
-            isJump = false;
-        }
-
-        rb.velocity = new Vector2(speed, rb.velocity.y);
-        /*
-        if (isGround)
-        {
-            rb.velocity = new Vector2(0, 0);
+            rb.velocity = new Vector2(rb.velocity.x * 0.1f, rb.velocity.y * 0.1f);
         }
         else
         {
-            //rb.velocity = new Vector2(moveSpeed, (inverse ? -speed : speed));
-            if (speed < 0)
+            if (isJump)
             {
-                rb.velocity = new Vector2(rb.velocity.x, (inverse ? -speed : speed) * Mathf.Abs(transform.position.y) * 0.5f);
+                rb.AddForce(new Vector2(0, inverse ? -jumpForce : jumpForce));
+                //rb.AddForce(new Vector2(jumpForce, 0));
+                isJump = false;
+            }
+
+            rb.velocity = new Vector2(speed, rb.velocity.y);
+
+            /*
+            if (isGround)
+            {
+                rb.velocity = new Vector2(0, 0);
             }
             else
             {
-                rb.velocity = new Vector2(rb.velocity.x, (inverse ? -speed : speed));
+                //rb.velocity = new Vector2(moveSpeed, (inverse ? -speed : speed));
+                if (speed < 0)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, (inverse ? -speed : speed) * Mathf.Abs(transform.position.y) * 0.5f);
+                }
+                else
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, (inverse ? -speed : speed));
+                }
+            }
+            */
+
+            if (!isGround && !isReleased && speed < defaultSpeed)
+            {
+                speed += 0.5f;
+            }
+
+            //if (-5.0f < speed && isReleased)
+            if (0 < speed && isReleased)
+            {
+                speed -= speedDelay;
             }
         }
-        */
+	}
 
-#if UNITY_EDITOR
-        //if (-5.0f < speed && isReleased)
-        if(0 < speed && isReleased)
-        {
-            speed -= speedDelay;
-        }
-#endif
-#if UNITY_ANDROID
-        //if (-5.0f < speed && isReleased)
-        if (0 < speed && isReleased)
-		{
-            speed -= speedDelay;
-		}
-#endif
+	IEnumerator WaitForJump()
+	{
+        isCharge = true;
+        spriteRenderer.sprite = sprite[3];
+        yield return new WaitForSeconds(0.25f);
+		isJump = true;
+        isCharge = false;
+		isGround = false;
+		spriteRenderer.sprite = sprite[1];
+	}
+
+	IEnumerator WaitForStand()
+	{
+		spriteRenderer.sprite = sprite[3];
+		yield return new WaitForSeconds(0.25f);
+        spriteRenderer.sprite = sprite[0];
 	}
 }

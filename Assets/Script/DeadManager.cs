@@ -9,7 +9,13 @@ public class DeadManager : MonoBehaviour
 	{
         if(other.tag.Equals("Player"))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            other.GetComponent<PlayerManager>().Dead();
         }
+	}
+
+	IEnumerator WaitForJump()
+	{
+		yield return new WaitForSeconds(3.0f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 }
