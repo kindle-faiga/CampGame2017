@@ -20,6 +20,7 @@ public class PlayerManager : MonoBehaviour
 
     private Rigidbody2D rb;
     private GameObject tapObject;
+    private GameObject mainCamera;
     private float depth = 10.0f;
     private bool isJump = false;
     private bool isGround = true;
@@ -29,6 +30,7 @@ public class PlayerManager : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         tapObject = GameObject.Find("Tap_Fields/" + transform.name);
+        mainCamera = GameObject.Find("Main Camera");
     }
 
 	void OnCollisionEnter2D(Collision2D col)
@@ -38,6 +40,7 @@ public class PlayerManager : MonoBehaviour
             isGround = true;
             isReleased = false;
             speed = 0;
+            iTween.MoveTo(mainCamera, iTween.Hash("x", transform.position.x + 5.0f, "time", 2.0f));
         }
 	}
 
