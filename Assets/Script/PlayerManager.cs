@@ -9,7 +9,10 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     private float jumpForce = 100.0f;
     [SerializeField]
-    private float speed = 10.0f;
+    private float defaultSpeed = 5.0f;
+	[SerializeField]
+	private float speedDelay = 0.05f;
+    private float speed = 0;
     [SerializeField]
     private KeyCode jumpKey;
 
@@ -32,6 +35,7 @@ public class PlayerManager : MonoBehaviour
         {
             isGround = true;
             isReleased = false;
+            speed = 0;
         }
 	}
 
@@ -73,13 +77,15 @@ public class PlayerManager : MonoBehaviour
             {
                 isJump = true;
                 isGround = false;
+                speed = defaultSpeed;
             }
 #endif
 #if UNITY_ANDROID
             if(GetTouchAction(TouchPhase.Began))
             {
                 isJump = true;
-				isGround = false;
+				isGround = false; 
+                speed = defaultSpeed;
 			}
 #endif
         }
@@ -105,21 +111,34 @@ public class PlayerManager : MonoBehaviour
     {
         if(isJump)
         {
-            rb.AddForce(new Vector2(0, inverse ? -jumpForce : jumpForce));
+            //rb.AddForce(new Vector2(0, inverse ? -jumpForce : jumpForce));
+            rb.AddForce(new Vector2(jumpForce, 0));
             isJump = false;
         }
 
+        //rb.velocity = new Vector2(speed, rb.velocity.y);
+        if (isGround)
+        {
+            rb.velocity = new Vector2(0, 0);
+        }
+        else
+        {
+            rb.velocity = new Vector2(rb.velocity.x, inverse ? -speed : speed);
+        }
+
 #if UNITY_EDITOR
-        if (Input.GetKey(jumpKey) && !isReleased)
-		{
-            transform.position += new Vector3(speed, 0, 0);
-		}
+        if (-5.0f < speed && isReleased)
+        //if((inverse ? -1f : 1f) < speed && isReleased)
+        {
+            speed -= speedDelay;
+        }
 #endif
 #if UNITY_ANDROID
-        if(GetTouchAction(TouchPhase.Stationary) && !isReleased)
-        {
-            transform.position += new Vector3(speed, 0, 0);
-        }
+        if (-5.0f < speed && isReleased)
+        //if ((inverse ? -1f : 1f) < speed && isReleased)
+		{
+            speed -= speedDelay;
+		}
 #endif
 	}
 }
