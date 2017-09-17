@@ -11,6 +11,8 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     private float defaultSpeed = 5.0f;
 	[SerializeField]
+	private float moveSpeed = 5.0f;
+	[SerializeField]
 	private float speedDelay = 0.05f;
     private float speed = 0;
     [SerializeField]
@@ -111,31 +113,41 @@ public class PlayerManager : MonoBehaviour
     {
         if(isJump)
         {
-            //rb.AddForce(new Vector2(0, inverse ? -jumpForce : jumpForce));
-            rb.AddForce(new Vector2(jumpForce, 0));
+            rb.AddForce(new Vector2(0, inverse ? -jumpForce : jumpForce));
+            //rb.AddForce(new Vector2(jumpForce, 0));
             isJump = false;
         }
 
-        //rb.velocity = new Vector2(speed, rb.velocity.y);
+        rb.velocity = new Vector2(speed, rb.velocity.y);
+        /*
         if (isGround)
         {
             rb.velocity = new Vector2(0, 0);
         }
         else
         {
-            rb.velocity = new Vector2(rb.velocity.x, inverse ? -speed : speed);
+            //rb.velocity = new Vector2(moveSpeed, (inverse ? -speed : speed));
+            if (speed < 0)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, (inverse ? -speed : speed) * Mathf.Abs(transform.position.y) * 0.5f);
+            }
+            else
+            {
+                rb.velocity = new Vector2(rb.velocity.x, (inverse ? -speed : speed));
+            }
         }
+        */
 
 #if UNITY_EDITOR
-        if (-5.0f < speed && isReleased)
-        //if((inverse ? -1f : 1f) < speed && isReleased)
+        //if (-5.0f < speed && isReleased)
+        if(0 < speed && isReleased)
         {
             speed -= speedDelay;
         }
 #endif
 #if UNITY_ANDROID
-        if (-5.0f < speed && isReleased)
-        //if ((inverse ? -1f : 1f) < speed && isReleased)
+        //if (-5.0f < speed && isReleased)
+        if (0 < speed && isReleased)
 		{
             speed -= speedDelay;
 		}
