@@ -15,19 +15,11 @@ public class DeadManager : MonoBehaviour
             if (!isWall)
             {
 				other.GetComponent<PlayerManager>().Dead();
-				StartCoroutine(WaitForJump());
             }
             else if(other.name.Equals(transform.name))
             {
                 other.GetComponent<PlayerManager>().Dead();
-                StartCoroutine(WaitForJump());
             }
         }
-	}
-
-	IEnumerator WaitForJump()
-	{
-		yield return new WaitForSeconds(3.0f);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 }

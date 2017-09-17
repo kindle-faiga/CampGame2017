@@ -19,7 +19,8 @@ public class EffectManager : MonoBehaviour
             if (!isHit && other.name.Equals(transform.name))
 			{
                 isHit = true;
-                Instantiate(effectObject,other.transform.position,transform.rotation);
+                GameObject obj = Instantiate(effectObject,other.transform.position,transform.rotation) as GameObject;
+                Destroy(obj, 1.0f);
 			}
 		}
 	}
