@@ -38,6 +38,15 @@ public class BlockManager : MonoBehaviour
             isPass = true;
             //blockStatus = BlockStatus.Default;
             gameManager.BlockCount();
+
+            if(blockStatus.Equals(BlockStatus.Flag))
+            {
+                GameObject effectObject = Resources.Load("Prefab/CheckPointEffect") as GameObject;
+                GameObject obj = Instantiate(effectObject, transform.position, transform.rotation) as GameObject;
+				Destroy(obj, 3.5f);
+
+                GameObject.Find("Background_Change").GetComponent<BackgroundManager>().ChangeSprite();
+            }
 		}
 	}
 

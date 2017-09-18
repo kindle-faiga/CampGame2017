@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     private PlayerManager playerManagerInverse;
     private EffectManager effectManager;
     private EffectManager effectManagerInverse;
+    private BackgroundManager backgroundManager;
     //private BlockCreater blockCreater;
     private List<MobManager> mobManagers = new List<MobManager>();
     private TapUIManager tapUIManager;
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour
 		//blockCreater = GameObject.Find("Field/Blocks").GetComponent<BlockCreater>();
         tapUIManager = GameObject.Find("TapSpace").GetComponent<TapUIManager>();
         tapUIManagerInverse = GameObject.Find("TapSpaceInverse").GetComponent<TapUIManager>();
+        backgroundManager = GameObject.Find("Background_Change").GetComponent<BackgroundManager>();
         audioSource = GetComponents<AudioSource>();
         logo = GameObject.Find("Logo");
 
@@ -255,6 +257,7 @@ public class GameManager : MonoBehaviour
         playerManagerInverse.SetRestart();
         effectManager.SetRestart();
         effectManagerInverse.SetRestart();
+        backgroundManager.SetRestart();
 
         foreach (GameObject b in GameObject.FindGameObjectsWithTag("Block"))
         {
