@@ -54,6 +54,8 @@ public class PlayerManager : MonoBehaviour
     private bool isJump = false;
     private bool isStart = false;
     private PlayerStatus playerStatus;
+    private Vector2 defaultVelocity;
+    private Vector3 defaultAngle;
 
     private void Start()
     {
@@ -85,6 +87,9 @@ public class PlayerManager : MonoBehaviour
 
         playerStatus = PlayerStatus.Release;
         speed = maxSpeed;
+
+        defaultVelocity = rb.velocity;
+        defaultAngle = transform.eulerAngles;
 
         if (!isStart)
         {
@@ -139,16 +144,28 @@ public class PlayerManager : MonoBehaviour
             else
             {
                 //Debug.Log( defaultHeight - transform.position.y);
-                iTween.MoveBy(logo, iTween.Hash("x", -3.0f, "time", 5.0f));
+                if(logo.activeSelf)iTween.MoveBy(logo, iTween.Hash("x", -3.0f, "time", 5.0f));
                 iTween.MoveTo(gameObject, iTween.Hash("y", defaultHeight + (inverse ? -0.02f : 0.02f), "time", 0.5f));
-            }
 
-			if (!inverse)
-			{
-				iTween.MoveTo(mainCamera, iTween.Hash("x", transform.position.x + 5.0f, "time", 2.0f));
-			}
+				if (!inverse)
+				{
+					iTween.MoveTo(mainCamera, iTween.Hash("x", transform.position.x + 5.0f, "time", 2.0f));
+				}
+            }
 		}
 	}
+
+    public void SetRestart()
+    {
+        transform.eulerAngles = defaultAngle;
+        defaultHeight = 0;
+        transform.position = defaultPos;
+		playerStatus = PlayerStatus.Release;
+		speed = maxSpeed;
+        rb.velocity = defaultVelocity;
+        GetComponent<BoxCollider2D>().isTrigger = false;
+        if (!inverse) blockCounter.GetComponent<BoxCollider2D>().enabled = true;
+    }
 
 	//死亡時の処理
 	//DeadManager.csから呼ばれる

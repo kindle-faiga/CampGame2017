@@ -12,6 +12,11 @@ public class EffectManager : MonoBehaviour
         effectObject = Resources.Load("Prefab/Effect") as GameObject;
     }
 
+    public void SetRestart()
+    {
+        isHit = false;
+    }
+
 	private void OnTriggerEnter2D(Collider2D other)
 	{
 		if (other.tag.Equals("Player"))

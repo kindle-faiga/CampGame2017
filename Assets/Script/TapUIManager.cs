@@ -10,10 +10,14 @@ public class TapUIManager : MonoBehaviour
     private SpriteRenderer spriteRender;
     private float elapsed = 0;
     private bool isTapped = false;
+    private Vector3 defaultPosition;
+    private Vector3 defaultScale;
 
 	void Start () 
     {
         spriteRender = GetComponent<SpriteRenderer>();
+        defaultPosition = transform.position;
+        defaultScale = transform.localScale;
 	}
 	
     public void Tap()
@@ -27,6 +31,17 @@ public class TapUIManager : MonoBehaviour
             transform.position = new Vector3(transform.position.x, transform.position.y + (inverse ? 3.0f : -3.0f), transform.position.z);
             iTween.ScaleTo(gameObject, new Vector3(3.0f, 3.0f, 1.0f), 2.5f);
         }
+    }
+
+    public void SetRestart()
+    {
+        isTapped = false;
+		Color color = spriteRender.color;
+		color.a = 1.0f;
+        elapsed = 0;
+		spriteRender.color = color;
+        transform.position = new Vector3(transform.position.x, defaultPosition.y, transform.position.z); ;
+        transform.localScale = defaultScale;
     }
 
     void Update () 

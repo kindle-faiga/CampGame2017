@@ -13,8 +13,12 @@ public class GameManager : MonoBehaviour
 
     private GameObject tapObject;
     private GameObject tapObjectInverse;
+	private GameObject mainCamera;
+    private GameObject logo;
     private PlayerManager playerManager;
     private PlayerManager playerManagerInverse;
+    private EffectManager effectManager;
+    private EffectManager effectManagerInverse;
     //private BlockCreater blockCreater;
     private List<MobManager> mobManagers = new List<MobManager>();
     private TapUIManager tapUIManager;
@@ -34,10 +38,15 @@ public class GameManager : MonoBehaviour
         tapObjectInverse = GameObject.Find("Tap_Fields/Player_Inverse");
         playerManager = GameObject.Find("Players/Player").GetComponent<PlayerManager>();
         playerManagerInverse = GameObject.Find("Players/Player_Inverse").GetComponent<PlayerManager>();
+        effectManager = GameObject.Find("EffectPoint/Player").GetComponent<EffectManager>();
+        effectManagerInverse = GameObject.Find("EffectPoint/Player_Inverse").GetComponent<EffectManager>();
+		mainCamera = GameObject.Find("Main Camera");
+        transform.position = mainCamera.transform.position;
 		//blockCreater = GameObject.Find("Field/Blocks").GetComponent<BlockCreater>();
         tapUIManager = GameObject.Find("TapSpace").GetComponent<TapUIManager>();
         tapUIManagerInverse = GameObject.Find("TapSpaceInverse").GetComponent<TapUIManager>();
         audioSource = GetComponents<AudioSource>();
+        logo = GameObject.Find("Logo");
 
         foreach (GameObject m in GameObject.FindGameObjectsWithTag("Mob"))
         {
@@ -155,10 +164,18 @@ public class GameManager : MonoBehaviour
 
         if(isRestart)
         {
-            if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.X))
-            { 
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            }
+			if (Input.GetKeyDown(KeyCode.Z))
+			{
+                tapUIManager.Tap();
+                tapUIManagerInverse.gameObject.SetActive(false);
+				StartCoroutine(WaitForStart());
+			}
+			else if (Input.GetKeyDown(KeyCode.X))
+			{
+                tapUIManagerInverse.Tap();
+                audioSource[1].PlayOneShot(audioSource[1].clip);
+				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+			}
         }
 #endif
 #if UNITY_ANDROID
@@ -194,10 +211,18 @@ public class GameManager : MonoBehaviour
 
 		if (isRestart)
 		{
-			if (GetTouchAction(TouchPhase.Began, tapObject) || GetTouchAction(TouchPhase.Began, tapObjectInverse))
+			if (GetTouchAction(TouchPhase.Began, tapObject))
 			{
-				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                tapUIManager.Tap();
+                tapUIManagerInverse.gameObject.SetActive(false);
+                StartCoroutine(WaitForStart());
 			}
+            else if(GetTouchAction(TouchPhase.Began, tapObjectInverse))
+            {
+                audioSource[1].PlayOneShot(audioSource[1].clip);
+                tapUIManagerInverse.Tap();
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
 		}
 #endif
 	}
@@ -208,8 +233,32 @@ public class GameManager : MonoBehaviour
         scoreUI.SetActive(true);
         scoreUI.GetComponentsInChildren<Text>()[0].text = ("キョリ : "+blockCount*100 + "m");
         scoreUI.GetComponentsInChildren<Text>()[1].text = ("キョリ : " + blockCount * 100 + "m");
-		yield return new WaitForSeconds(1.0f);
+        tapUIManager.SetRestart();
+        if(!tapUIManagerInverse.gameObject.activeSelf)tapUIManagerInverse.gameObject.SetActive(true);
+        tapUIManagerInverse.SetRestart();
+		yield return new WaitForSeconds(0.5f);
         isRestart = true;
-		//SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
+
+    IEnumerator WaitForStart()
+    {
+		isRestart = false;
+        scoreUI.SetActive(false);
+        blockCount = 0;
+        isOtherDead = false;
+		audioSource[1].PlayOneShot(audioSource[1].clip);
+        logo.SetActive(false);
+        iTween.MoveTo(mainCamera, iTween.Hash("x", transform.position.x, "time", 2.0f));
+		yield return new WaitForSeconds(1.0f);
+        audioSource[0].Play();
+        playerManager.SetRestart();
+        playerManagerInverse.SetRestart();
+        effectManager.SetRestart();
+        effectManagerInverse.SetRestart();
+
+        foreach (GameObject b in GameObject.FindGameObjectsWithTag("Block"))
+        {
+            b.GetComponent<BlockManager>().SetRestart();
+        }
+    }
 }

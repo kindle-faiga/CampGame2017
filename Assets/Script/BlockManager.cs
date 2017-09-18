@@ -5,13 +5,15 @@ using UnityEngine;
 public enum BlockStatus
 {
     Default,
-    Sway
+    Sway,
+    Flag,
 };
 
 public class BlockManager : MonoBehaviour 
 {
     [SerializeField]
     BlockStatus blockStatus = BlockStatus.Default;
+    BlockStatus defaultBlockStatus;
     private GameManager gameManager;
     private float elapsed = 0;
     private bool isPass = false;
@@ -19,7 +21,15 @@ public class BlockManager : MonoBehaviour
 	void Start () 
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        defaultBlockStatus = blockStatus;
 	}
+
+    public void SetRestart()
+    {
+        blockStatus = defaultBlockStatus;
+        isPass = false;
+    }
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
