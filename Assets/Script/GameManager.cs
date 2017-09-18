@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour 
@@ -8,20 +9,28 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int blockCount = 0;
 
+    private GameObject scoreUI;
+
     private GameObject tapObject;
     private GameObject tapObjectInverse;
     private PlayerManager playerManager;
     private PlayerManager playerManagerInverse;
+    private BlockCreater blockCreater;
     private List<MobManager> mobManagers = new List<MobManager>();
     private bool isOtherDead = false;
     private bool isStart = false;
+    private bool tapStart = false;
+    private bool tapInverseStart = false;
 
     private void Start()
     {
+        scoreUI = GameObject.Find("UI/Panel/Image");
+        scoreUI.SetActive(false);
         tapObject = GameObject.Find("Tap_Fields/Player");
         tapObjectInverse = GameObject.Find("Tap_Fields/Player_Inverse");
         playerManager = GameObject.Find("Players/Player").GetComponent<PlayerManager>();
         playerManagerInverse = GameObject.Find("Players/Player_Inverse").GetComponent<PlayerManager>();
+		blockCreater = GameObject.Find("Field/Blocks").GetComponent<BlockCreater>();
 
         foreach (GameObject m in GameObject.FindGameObjectsWithTag("Mob"))
         {
@@ -37,10 +46,11 @@ public class GameManager : MonoBehaviour
     public void BlockCount()
     {
         ++blockCount;
+        blockCreater.CreateBlock();
     }
 
 	//タッチ、タップの取得（変更を禁ず）
-	private bool GetTouchAction(TouchPhase phase)
+    private bool GetTouchAction(TouchPhase phase, GameObject target)
 	{
 		if (0 < Input.touchCount)
 		{
@@ -52,7 +62,7 @@ public class GameManager : MonoBehaviour
 				{
 					RaycastHit2D hit = IsSelected(t.position);
 
-                    if (hit && (hit.collider.gameObject.Equals(tapObject) || hit.collider.gameObject.Equals(tapObjectInverse)))
+                    if (hit && (hit.collider.gameObject.Equals(target)))
 					{
 						return true;
 					}
@@ -101,20 +111,53 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Z))
 		{
-            SetStart();
+			tapStart = true;
+
+			if (tapInverseStart)
+			{
+				SetStart();
+			}
+		}
+
+		if (Input.GetKeyDown(KeyCode.X))
+		{
+			tapInverseStart = true;
+
+			if (tapStart)
+			{
+				SetStart();
+			}
 		}
 #endif
 #if UNITY_ANDROID
-		if (GetTouchAction(TouchPhase.Began))
+        if (GetTouchAction(TouchPhase.Began, tapObject))
 		{
-            SetStart();
+            tapStart = true;
+
+            if (tapInverseStart)
+            {
+                SetStart();
+            }
+		}
+
+        if (GetTouchAction(TouchPhase.Began, tapObjectInverse))
+		{
+            tapInverseStart = true;
+
+            if (tapStart)
+			{
+				SetStart();
+			}
 		}
 #endif
 	}
 
 	IEnumerator WaitForRestart()
 	{
-		yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.0f);
+        scoreUI.SetActive(true);
+        scoreUI.GetComponentInChildren<Text>().text = ("Score : "+blockCount);
+		yield return new WaitForSeconds(1.0f);
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 }

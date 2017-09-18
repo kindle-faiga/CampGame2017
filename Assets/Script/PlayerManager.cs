@@ -29,7 +29,6 @@ public class PlayerManager : MonoBehaviour
     private GameObject tapObject;
     private GameObject mainCamera;
     private GameObject logo;
-    private BlockCreater blockCreater;
     private SpriteRenderer spriteRenderer;
     private PlayerState playerState;
     private AudioSource audioSource;
@@ -62,8 +61,6 @@ public class PlayerManager : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         //タップ判定取得
         tapObject = GameObject.Find("Tap_Fields/" + transform.name);
-        //ブロックオブジェクト取得
-        blockCreater = GameObject.Find("Field/Blocks").GetComponent<BlockCreater>();
         //カメラ情報取得
         mainCamera = GameObject.Find("Main Camera");
         //背景とロゴ情報取得
@@ -149,7 +146,6 @@ public class PlayerManager : MonoBehaviour
 			if (!inverse)
 			{
 				iTween.MoveTo(mainCamera, iTween.Hash("x", transform.position.x + 5.0f, "time", 2.0f));
-				blockCreater.CreateBlock();
 			}
 		}
 	}
