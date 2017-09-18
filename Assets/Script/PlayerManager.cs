@@ -28,10 +28,12 @@ public class PlayerManager : MonoBehaviour
     private GameManager gameManager;
     private GameObject tapObject;
     private GameObject mainCamera;
+    private GameObject logo;
     private BlockCreater blockCreater;
     private SpriteRenderer spriteRenderer;
     private PlayerState playerState;
     private AudioSource audioSource;
+    private GameObject blockCounter;
     private float depth = 10.0f;
 
 	//ジャンプの強さ
@@ -64,12 +66,15 @@ public class PlayerManager : MonoBehaviour
         blockCreater = GameObject.Find("Field/Blocks").GetComponent<BlockCreater>();
         //カメラ情報取得
         mainCamera = GameObject.Find("Main Camera");
+        //背景とロゴ情報取得
+        logo = GameObject.Find("Logo");
         //キャラクターの原画場情報取得
         spriteRenderer = GetComponent<SpriteRenderer>();
         //ゲームの管理情報取得
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         //音取得
         audioSource = GetComponent<AudioSource>();
+        if (!inverse) blockCounter = GameObject.Find("BlockCounter");
 
         //ジャンプの強さ、速度の初期化
         playerState = GetComponentInParent<PlayerState>();
@@ -127,6 +132,7 @@ public class PlayerManager : MonoBehaviour
 		{
 			speed = 0;
 			playerStatus = PlayerStatus.Stand;
+            audioSource.PlayOneShot(clips[3]);
 			StartCoroutine(WaitForStand());
 
             if (Mathf.Abs(defaultHeight) < 0.0001f)
@@ -136,6 +142,7 @@ public class PlayerManager : MonoBehaviour
             else
             {
                 //Debug.Log( defaultHeight - transform.position.y);
+                iTween.MoveBy(logo, iTween.Hash("x", -3.0f, "time", 5.0f));
                 iTween.MoveTo(gameObject, iTween.Hash("y", defaultHeight + (inverse ? -0.02f : 0.02f), "time", 0.5f));
             }
 
@@ -162,6 +169,7 @@ public class PlayerManager : MonoBehaviour
 			StartCoroutine(WaitForDead());
 			//キャラクターが激突しないよう当たり判定を解除
 			GetComponent<BoxCollider2D>().isTrigger = true;
+            if(!inverse)blockCounter.GetComponent<BoxCollider2D>().enabled = false;
 		}
 	}
 

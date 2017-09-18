@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour 
 {
+    [SerializeField]
+    private int blockCount = 0;
+
     private GameObject tapObject;
     private GameObject tapObjectInverse;
     private PlayerManager playerManager;
@@ -24,6 +27,16 @@ public class GameManager : MonoBehaviour
         {
             mobManagers.Add(m.GetComponent<MobManager>());
         }
+    }
+
+    public int GetBlockCount()
+    {
+        return blockCount;
+    }
+
+    public void BlockCount()
+    {
+        ++blockCount;
     }
 
 	//タッチ、タップの取得（変更を禁ず）

@@ -12,11 +12,21 @@ public class BlockManager : MonoBehaviour
 {
     [SerializeField]
     BlockStatus blockStatus = BlockStatus.Default;
+    private GameManager gameManager;
     private float elapsed = 0;
 	
 	void Start () 
     {
-		
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+	}
+
+	private void OnTriggerEnter2D(Collider2D other)
+	{
+		if (other.tag.Equals("BlockCounter"))
+		{
+            //blockStatus = BlockStatus.Default;
+            gameManager.BlockCount();
+		}
 	}
 
     public void ChangeState(BlockStatus _blockStatus)
