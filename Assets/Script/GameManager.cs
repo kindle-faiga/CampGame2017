@@ -251,13 +251,13 @@ public class GameManager : MonoBehaviour
 		audioSource[1].PlayOneShot(audioSource[1].clip);
         logo.SetActive(false);
         iTween.MoveTo(mainCamera, iTween.Hash("x", transform.position.x, "time", 2.0f));
+        backgroundManager.SetRestart();
 		yield return new WaitForSeconds(1.0f);
         audioSource[0].Play();
         playerManager.SetRestart();
         playerManagerInverse.SetRestart();
         effectManager.SetRestart();
         effectManagerInverse.SetRestart();
-        backgroundManager.SetRestart();
 
         foreach (GameObject b in GameObject.FindGameObjectsWithTag("Block"))
         {

@@ -144,7 +144,7 @@ public class PlayerManager : MonoBehaviour
             else
             {
                 //Debug.Log( defaultHeight - transform.position.y);
-                if(logo.activeSelf)iTween.MoveBy(logo, iTween.Hash("x", -3.0f, "time", 5.0f));
+                if(logo.activeSelf)iTween.MoveBy(logo, iTween.Hash("x", -5.0f, "time", 4.0f));
                 iTween.MoveTo(gameObject, iTween.Hash("y", defaultHeight + (inverse ? -0.02f : 0.02f), "time", 0.5f));
 
 				if (!inverse)

@@ -12,7 +12,7 @@ public class CheckPointEffect : MonoBehaviour
         iTween.MoveTo(gameObject, iTween.Hash("y", inverse ? -3.0f : 3.0f, "time", 1.5f));
         iTween.ValueTo(gameObject, iTween.Hash("from", 0f, "to", 1.0f, "time", 1.0f, "onupdate", "setValue"));
 		yield return new WaitForSeconds(2.0f);
-        iTween.ValueTo(gameObject, iTween.Hash("from", 1.0f, "to", 0, "time", 2.0f, "onupdate", "setValue"));
+        iTween.ValueTo(gameObject, iTween.Hash("from", 1.0f, "to", 0, "time", 0.5f, "onupdate", "setValue"));
 	}
 
     private void setValue(float val)
