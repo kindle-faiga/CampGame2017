@@ -13,7 +13,6 @@ public class DustManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         transform.position = transform.position - moveDistance;
-        Debug.Log(transform.position);
         if (transform.position.x < -13.8f)
         {
             transform.position = new Vector3(13.8f, 0, 0);

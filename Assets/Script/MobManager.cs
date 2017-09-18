@@ -39,6 +39,7 @@ public class MobManager : MonoBehaviour
 	private bool isJump = false;
     private bool isStart = false;
 	private MobStatus mobStatus;
+    private float waitTime = 0.5f;
 
 	private void Start()
 	{
@@ -67,7 +68,7 @@ public class MobManager : MonoBehaviour
 		{
 			speed = 0;
 			mobStatus = MobStatus.Stand;
-			StartCoroutine(WaitForStand());
+            StartCoroutine(WaitForStand());
 		}
 	}
 
@@ -81,7 +82,11 @@ public class MobManager : MonoBehaviour
             }
             else
             {
-                transform.position = new Vector3(defaultPos.x, transform.position.y, transform.position.z);   
+                rb.velocity = Vector2.zero;
+                transform.position = new Vector3(defaultPos.x, defaultPos.y, defaultPos.z);
+                speed = maxSpeed;
+				mobStatus = MobStatus.Release;
+				spriteRenderer.sprite = sprite[2];
             }
 		}
 	}
@@ -133,7 +138,7 @@ public class MobManager : MonoBehaviour
         isJump = true;
         mobStatus = MobStatus.Jump;
 		spriteRenderer.sprite = sprite[1];
-        yield return new WaitForSeconds(0.335f);
+        yield return new WaitForSeconds(waitTime);
         mobStatus = MobStatus.Release;
         spriteRenderer.sprite = sprite[2];
 	}
