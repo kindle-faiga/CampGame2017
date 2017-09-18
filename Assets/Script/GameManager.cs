@@ -8,8 +8,12 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private int blockCount = 0;
+    private int maxCount = 0;
+    private bool isEnd = false;
+    private bool isReset = false;
 
     private GameObject scoreUI;
+    private GameObject resultUI;
 
     private GameObject tapObject;
     private GameObject tapObjectInverse;
@@ -35,6 +39,8 @@ public class GameManager : MonoBehaviour
     {
         scoreUI = GameObject.Find("UI/Panel/Image");
         scoreUI.SetActive(false);
+        resultUI = GameObject.Find("ResultUI/Panel/Image");
+        resultUI.SetActive(false);
         tapObject = GameObject.Find("Tap_Fields/Player");
         tapObjectInverse = GameObject.Find("Tap_Fields/Player_Inverse");
         playerManager = GameObject.Find("Players/Player").GetComponent<PlayerManager>();
@@ -64,7 +70,6 @@ public class GameManager : MonoBehaviour
     public void BlockCount()
     {
         ++blockCount;
-        //blockCreater.CreateBlock();
     }
 
 	//タッチ、タップの取得（変更を禁ず）
@@ -106,6 +111,10 @@ public class GameManager : MonoBehaviour
     {
         if(isOtherDead)
         {
+            if(maxCount < blockCount)
+            {
+                maxCount = blockCount;
+            }
             StartCoroutine(WaitForRestart());
         }
         else
@@ -164,7 +173,7 @@ public class GameManager : MonoBehaviour
 			}
 		}
 
-        if(isRestart)
+        if(isRestart && !isEnd)
         {
 			if (Input.GetKeyDown(KeyCode.Z))
 			{
@@ -176,9 +185,18 @@ public class GameManager : MonoBehaviour
 			{
                 tapUIManagerInverse.Tap();
                 audioSource[1].PlayOneShot(audioSource[1].clip);
-				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+				StartCoroutine(WaitForEnd());
 			}
         }
+
+		if (isReset)
+		{
+			if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.X))
+			{
+                audioSource[1].PlayOneShot(audioSource[1].clip);
+				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+			}
+		}
 #endif
 #if UNITY_ANDROID
         if (GetTouchAction(TouchPhase.Began, tapObject))
@@ -211,7 +229,7 @@ public class GameManager : MonoBehaviour
 			}
 		}
 
-		if (isRestart)
+        if (isRestart && !isEnd)
 		{
 			if (GetTouchAction(TouchPhase.Began, tapObject))
 			{
@@ -223,9 +241,18 @@ public class GameManager : MonoBehaviour
             {
                 audioSource[1].PlayOneShot(audioSource[1].clip);
                 tapUIManagerInverse.Tap();
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                StartCoroutine(WaitForEnd());
             }
 		}
+
+        if(isReset)
+        {
+            if (GetTouchAction(TouchPhase.Began, tapObject) || GetTouchAction(TouchPhase.Began, tapObjectInverse))
+            { 
+                audioSource[1].PlayOneShot(audioSource[1].clip);
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
+        }
 #endif
 	}
 
@@ -263,5 +290,35 @@ public class GameManager : MonoBehaviour
         {
             b.GetComponent<BlockManager>().SetRestart();
         }
+    }
+    IEnumerator WaitForEnd()
+    {
+        isEnd = true;
+        scoreUI.SetActive(false);
+        resultUI.SetActive(true);
+        resultUI.GetComponentsInChildren<Text>()[0].enabled = false;
+        resultUI.GetComponentsInChildren<Text>()[1].enabled = false;
+        resultUI.GetComponentsInChildren<Text>()[2].enabled = false;
+        yield return new WaitForSeconds(0.5f);
+        resultUI.GetComponentsInChildren<Text>()[0].enabled = true;
+        resultUI.GetComponentsInChildren<Text>()[0].text = ("サイダイキョリ : " + maxCount * 100 + "m");
+		yield return new WaitForSeconds(0.5f);
+		resultUI.GetComponentsInChildren<Text>()[1].enabled = true;
+        yield return new WaitForSeconds(1.5f);
+		resultUI.GetComponentsInChildren<Text>()[2].enabled = true;
+        if (maxCount < 5)
+        {
+            resultUI.GetComponentsInChildren<Text>()[2].text = ("タニン");
+        }
+		else if (maxCount < 10)
+		{
+			resultUI.GetComponentsInChildren<Text>()[2].text = ("ソコソコ");
+		}
+        else
+        {
+            resultUI.GetComponentsInChildren<Text>()[2].text = ("イイカンジ");
+        }
+        yield return new WaitForSeconds(1.0f);
+        isReset = true;
     }
 }
