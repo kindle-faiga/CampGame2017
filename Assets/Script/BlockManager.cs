@@ -14,6 +14,7 @@ public class BlockManager : MonoBehaviour
     BlockStatus blockStatus = BlockStatus.Default;
     private GameManager gameManager;
     private float elapsed = 0;
+    private bool isPass = false;
 	
 	void Start () 
     {
@@ -22,8 +23,9 @@ public class BlockManager : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.tag.Equals("BlockCounter"))
+        if (other.tag.Equals("BlockCounter") && !isPass)
 		{
+            isPass = true;
             //blockStatus = BlockStatus.Default;
             gameManager.BlockCount();
 		}

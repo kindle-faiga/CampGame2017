@@ -133,7 +133,7 @@ public class MobManager : MonoBehaviour
         isJump = true;
         mobStatus = MobStatus.Jump;
 		spriteRenderer.sprite = sprite[1];
-        yield return new WaitForSeconds(0.34f);
+        yield return new WaitForSeconds(0.335f);
         mobStatus = MobStatus.Release;
         spriteRenderer.sprite = sprite[2];
 	}
