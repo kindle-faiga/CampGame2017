@@ -8,6 +8,7 @@ public class BackgroundManager : MonoBehaviour
     private Sprite sprite;
     private SpriteRenderer spriteRenderer;
     private Sprite defaultSprite;
+    bool isChange = false;
 
 	void Start () 
     {
@@ -16,16 +17,21 @@ public class BackgroundManager : MonoBehaviour
 	
     public void SetRestart()
     {
+        isChange = false;
         spriteRenderer.sprite = defaultSprite;
     }
 
     public void ChangeSprite()
     {
-        spriteRenderer.sprite = sprite;
+        if (!isChange)
+        {
+            isChange = true;
+            spriteRenderer.sprite = sprite;
 
-        Color color = spriteRenderer.color;
-		color.a = 0f;
-        spriteRenderer.color = color;
+            Color color = spriteRenderer.color;
+            color.a = 0f;
+            spriteRenderer.color = color;
+        }
     }
 
     private void Update()
