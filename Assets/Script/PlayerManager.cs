@@ -297,6 +297,7 @@ public class PlayerManager : MonoBehaviour
     //死亡後の溜め
 	IEnumerator WaitForDead()
 	{
+        gameManager.StopBGM();
 		yield return new WaitForSeconds(1.5f);
         playerStatus = PlayerStatus.End;
         audioSource.PlayOneShot(clips[2]);

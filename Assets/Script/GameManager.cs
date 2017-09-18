@@ -17,10 +17,14 @@ public class GameManager : MonoBehaviour
     private PlayerManager playerManagerInverse;
     private BlockCreater blockCreater;
     private List<MobManager> mobManagers = new List<MobManager>();
+    private TapUIManager tapUIManager;
+    private TapUIManager tapUIManagerInverse;
+    private AudioSource[] audioSource;
     private bool isOtherDead = false;
     private bool isStart = false;
     private bool tapStart = false;
     private bool tapInverseStart = false;
+    private bool isRestart = false;
 
     private void Start()
     {
@@ -31,6 +35,9 @@ public class GameManager : MonoBehaviour
         playerManager = GameObject.Find("Players/Player").GetComponent<PlayerManager>();
         playerManagerInverse = GameObject.Find("Players/Player_Inverse").GetComponent<PlayerManager>();
 		blockCreater = GameObject.Find("Field/Blocks").GetComponent<BlockCreater>();
+        tapUIManager = GameObject.Find("TapSpace").GetComponent<TapUIManager>();
+        tapUIManagerInverse = GameObject.Find("TapSpaceInverse").GetComponent<TapUIManager>();
+        audioSource = GetComponents<AudioSource>();
 
         foreach (GameObject m in GameObject.FindGameObjectsWithTag("Mob"))
         {
@@ -79,6 +86,11 @@ public class GameManager : MonoBehaviour
 		return Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, 10.0f, 1 << LayerMask.NameToLayer("Tap"));
 	}
 
+    public void StopBGM()
+    {
+        audioSource[0].Stop();
+    }
+
     public void SetDeadCount()
     {
         if(isOtherDead)
@@ -99,6 +111,8 @@ public class GameManager : MonoBehaviour
             playerManager.SetStart();
             playerManagerInverse.SetStart();
 
+            audioSource[0].Play();
+
             foreach (MobManager m in mobManagers)
             {
                 m.SetStart();
@@ -111,7 +125,12 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Z))
 		{
-			tapStart = true;
+            if(!tapStart)
+            {
+                tapStart = true;
+                audioSource[1].PlayOneShot(audioSource[1].clip);
+                tapUIManager.Tap();
+            }
 
 			if (tapInverseStart)
 			{
@@ -121,18 +140,36 @@ public class GameManager : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.X))
 		{
-			tapInverseStart = true;
+            if (!tapInverseStart)
+			{
+				tapInverseStart = true;
+				audioSource[1].PlayOneShot(audioSource[1].clip);
+				tapUIManagerInverse.Tap();
+			}
 
 			if (tapStart)
 			{
 				SetStart();
 			}
 		}
+
+        if(isRestart)
+        {
+            if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.X))
+            { 
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
+        }
 #endif
 #if UNITY_ANDROID
         if (GetTouchAction(TouchPhase.Began, tapObject))
 		{
-            tapStart = true;
+			if (!tapStart)
+			{
+                tapStart = true;
+				audioSource[1].PlayOneShot(audioSource[1].clip);
+				tapUIManager.Tap();
+			}
 
             if (tapInverseStart)
             {
@@ -142,11 +179,24 @@ public class GameManager : MonoBehaviour
 
         if (GetTouchAction(TouchPhase.Began, tapObjectInverse))
 		{
-            tapInverseStart = true;
+			if (!tapInverseStart)
+			{
+				tapInverseStart = true;
+				audioSource[1].PlayOneShot(audioSource[1].clip);
+				tapUIManagerInverse.Tap();
+			}
 
             if (tapStart)
 			{
 				SetStart();
+			}
+		}
+
+		if (isRestart)
+		{
+			if (GetTouchAction(TouchPhase.Began, tapObject) || GetTouchAction(TouchPhase.Began, tapObjectInverse))
+			{
+				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 			}
 		}
 #endif
@@ -158,6 +208,7 @@ public class GameManager : MonoBehaviour
         scoreUI.SetActive(true);
         scoreUI.GetComponentInChildren<Text>().text = ("Score : "+blockCount);
 		yield return new WaitForSeconds(1.0f);
-		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        isRestart = true;
+		//SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 }
