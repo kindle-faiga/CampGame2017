@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     private PlayerManager playerManagerInverse;
     private List<MobManager> mobManagers = new List<MobManager>();
     private bool isOtherDead = false;
+    private bool isStart = false;
 
     private void Start()
     {
@@ -69,12 +70,16 @@ public class GameManager : MonoBehaviour
 
     private void SetStart()
     {
-        playerManager.SetStart();
-        playerManagerInverse.SetStart();
-
-        foreach(MobManager m in mobManagers)
+        if (!isStart)
         {
-            m.SetStart();
+            isStart = true;
+            playerManager.SetStart();
+            playerManagerInverse.SetStart();
+
+            foreach (MobManager m in mobManagers)
+            {
+                m.SetStart();
+            }
         }
     }
 

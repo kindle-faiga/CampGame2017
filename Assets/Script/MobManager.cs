@@ -89,6 +89,7 @@ public class MobManager : MonoBehaviour
     public void SetStart()
     {
         isStart = true;
+        Destroy(gameObject);
     }
 
 	private void FixedUpdate()
@@ -132,7 +133,7 @@ public class MobManager : MonoBehaviour
         isJump = true;
         mobStatus = MobStatus.Jump;
 		spriteRenderer.sprite = sprite[1];
-        yield return new WaitForSeconds(0.35f);
+        yield return new WaitForSeconds(0.34f);
         mobStatus = MobStatus.Release;
         spriteRenderer.sprite = sprite[2];
 	}

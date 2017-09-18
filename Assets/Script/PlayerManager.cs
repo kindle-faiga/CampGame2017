@@ -31,6 +31,7 @@ public class PlayerManager : MonoBehaviour
     private BlockCreater blockCreater;
     private SpriteRenderer spriteRenderer;
     private PlayerState playerState;
+    private AudioSource audioSource;
     private float depth = 10.0f;
 
 	//ジャンプの強さ
@@ -43,13 +44,15 @@ public class PlayerManager : MonoBehaviour
 	private float acceleration;
 	//横軸の減衰速度
 	private float deceleration;
+    //音の種類
+    private AudioClip[] clips;
 
-    //キャラクターの状態
-    private Vector3 defaultPos;
+	//キャラクターの状態
+	private Vector3 defaultPos;
     private float defaultHeight = 0;
     private bool isJump = false;
     private bool isStart = false;
-    private PlayerStatus playerStatus; 
+    private PlayerStatus playerStatus;
 
     private void Start()
     {
@@ -65,6 +68,8 @@ public class PlayerManager : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         //ゲームの管理情報取得
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        //音取得
+        audioSource = GetComponent<AudioSource>();
 
         //ジャンプの強さ、速度の初期化
         playerState = GetComponentInParent<PlayerState>();
@@ -72,6 +77,7 @@ public class PlayerManager : MonoBehaviour
         maxSpeed = playerState.GetMaxSpeed();
         acceleration = playerState.GetAcceleration();
         deceleration = playerState.GetDeceleration();
+        clips = playerState.GetAudioClips();
 
         defaultPos = transform.position;
 
@@ -148,6 +154,7 @@ public class PlayerManager : MonoBehaviour
 		//複数回死亡処理がないよう判定
 		if (!playerStatus.Equals(PlayerStatus.Dead) && !playerStatus.Equals(PlayerStatus.End))
 		{
+            audioSource.PlayOneShot(clips[1]);
 			playerStatus = PlayerStatus.Dead;
 			//死亡時の画像に切り替え
 			spriteRenderer.sprite = sprite[4];
@@ -264,9 +271,14 @@ public class PlayerManager : MonoBehaviour
         playerStatus = PlayerStatus.Charge;
         spriteRenderer.sprite = sprite[3];
         yield return new WaitForSeconds(0.25f);
+        audioSource.PlayOneShot(clips[0]);
         if (playerStatus.Equals(PlayerStatus.Charge))
         {
             playerStatus = PlayerStatus.Jump;
+        }
+        else if(playerStatus.Equals(PlayerStatus.Release))
+        {
+            speed = maxSpeed * 0.5f;
         }
         isJump = true;
 		spriteRenderer.sprite = sprite[1];
@@ -283,6 +295,7 @@ public class PlayerManager : MonoBehaviour
 	{
 		yield return new WaitForSeconds(1.5f);
         playerStatus = PlayerStatus.End;
+        audioSource.PlayOneShot(clips[2]);
         gameManager.SetDeadCount();
 	}
 }

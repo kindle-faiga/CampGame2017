@@ -16,9 +16,12 @@ public class PlayerState : MonoBehaviour
 	//横軸の減衰速度
 	[SerializeField]
 	private float deceleration = 0.05f;
+    [SerializeField]
+    private AudioClip[] clips; 
 
     public float GetJumpForce() { return jumpForce; }
     public float GetMaxSpeed() { return maxSpeed; }
     public float GetAcceleration() { return acceleration; }
     public float GetDeceleration() { return deceleration; }
+    public AudioClip[] GetAudioClips() { return clips; }
 }
