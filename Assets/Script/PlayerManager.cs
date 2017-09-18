@@ -14,6 +14,8 @@ public enum PlayerStatus
 
 public class PlayerManager : MonoBehaviour
 {
+	[SerializeField]
+	private Transform anotherPlayer;
     //上下反転したキャラクターか否か
     [SerializeField]
     private bool inverse;
@@ -144,7 +146,7 @@ public class PlayerManager : MonoBehaviour
             else
             {
                 //Debug.Log( defaultHeight - transform.position.y);
-                if(logo.activeSelf)iTween.MoveBy(logo, iTween.Hash("x", -5.0f, "time", 4.0f));
+                if(logo.activeSelf)iTween.MoveTo(logo, iTween.Hash("x", logo.transform.position.x - 2.0f, "time", 4.0f));
                 iTween.MoveTo(gameObject, iTween.Hash("y", defaultHeight + (inverse ? -0.02f : 0.02f), "time", 0.5f));
 
 				if (!inverse)
@@ -270,9 +272,10 @@ public class PlayerManager : MonoBehaviour
                     break;
                 case PlayerStatus.Release:
                     rb.velocity = new Vector2(speed, rb.velocity.y);
+                    float dis = transform.position.x - anotherPlayer.position.x;
                     if (0 < speed)
                     {
-                        speed -= deceleration;
+                        speed -= (deceleration + (dis * 0.075f));
                     }
                     break;
                 case PlayerStatus.Dead:

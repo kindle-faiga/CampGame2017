@@ -1394,6 +1394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9554dc19c110e441ba16a18c313ec2f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anotherPlayer: {fileID: 2143501751}
   inverse: 0
   jumpKey: 122
   sprite:
@@ -7344,6 +7345,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9554dc19c110e441ba16a18c313ec2f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anotherPlayer: {fileID: 432018851}
   inverse: 1
   jumpKey: 120
   sprite:
