@@ -206,7 +206,8 @@ public class GameManager : MonoBehaviour
 	{
         yield return new WaitForSeconds(1.0f);
         scoreUI.SetActive(true);
-        scoreUI.GetComponentInChildren<Text>().text = ("Score : "+blockCount);
+        scoreUI.GetComponentsInChildren<Text>()[0].text = ("キョリ : "+blockCount*100 + "m");
+        scoreUI.GetComponentsInChildren<Text>()[1].text = ("キョリ : " + blockCount * 100 + "m");
 		yield return new WaitForSeconds(1.0f);
         isRestart = true;
 		//SceneManager.LoadScene(SceneManager.GetActiveScene().name);
