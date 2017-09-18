@@ -146,7 +146,7 @@ public class PlayerManager : MonoBehaviour
             else
             {
                 //Debug.Log( defaultHeight - transform.position.y);
-                if(logo.activeSelf)iTween.MoveTo(logo, iTween.Hash("x", logo.transform.position.x - 2.0f, "time", 4.0f));
+                if(logo.activeSelf)iTween.MoveTo(logo, iTween.Hash("x", logo.transform.position.x - 1.0f, "time", 5.0f));
                 iTween.MoveTo(gameObject, iTween.Hash("y", defaultHeight + (inverse ? -0.02f : 0.02f), "time", 0.5f));
 
 				if (!inverse)
@@ -312,7 +312,7 @@ public class PlayerManager : MonoBehaviour
 	{
 		spriteRenderer.sprite = sprite[3];
 		yield return new WaitForSeconds(0.25f);
-        spriteRenderer.sprite = sprite[0];
+        if(!playerState.Equals(PlayerStatus.Dead) || !playerState.Equals(PlayerStatus.End))spriteRenderer.sprite = sprite[0];
 	}
     //死亡後の溜め
 	IEnumerator WaitForDead()

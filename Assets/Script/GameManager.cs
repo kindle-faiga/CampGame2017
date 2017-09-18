@@ -241,6 +241,7 @@ public class GameManager : MonoBehaviour
             {
                 audioSource[1].PlayOneShot(audioSource[1].clip);
                 tapUIManagerInverse.Tap();
+                tapUIManager.gameObject.SetActive(false);
                 StartCoroutine(WaitForEnd());
             }
 		}
