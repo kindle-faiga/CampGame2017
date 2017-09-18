@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     private GameObject tapObjectInverse;
     private PlayerManager playerManager;
     private PlayerManager playerManagerInverse;
-    private BlockCreater blockCreater;
+    //private BlockCreater blockCreater;
     private List<MobManager> mobManagers = new List<MobManager>();
     private TapUIManager tapUIManager;
     private TapUIManager tapUIManagerInverse;
@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
         tapObjectInverse = GameObject.Find("Tap_Fields/Player_Inverse");
         playerManager = GameObject.Find("Players/Player").GetComponent<PlayerManager>();
         playerManagerInverse = GameObject.Find("Players/Player_Inverse").GetComponent<PlayerManager>();
-		blockCreater = GameObject.Find("Field/Blocks").GetComponent<BlockCreater>();
+		//blockCreater = GameObject.Find("Field/Blocks").GetComponent<BlockCreater>();
         tapUIManager = GameObject.Find("TapSpace").GetComponent<TapUIManager>();
         tapUIManagerInverse = GameObject.Find("TapSpaceInverse").GetComponent<TapUIManager>();
         audioSource = GetComponents<AudioSource>();
@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
     public void BlockCount()
     {
         ++blockCount;
-        blockCreater.CreateBlock();
+        //blockCreater.CreateBlock();
     }
 
 	//タッチ、タップの取得（変更を禁ず）
