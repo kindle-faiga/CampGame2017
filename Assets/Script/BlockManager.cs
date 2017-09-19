@@ -88,7 +88,7 @@ public class BlockManager : MonoBehaviour
 				break;
             case BlockStatus.Sway:
                 elapsed += Time.deltaTime * 2.0f;
-                transform.position = new Vector3(transform.position.x + Mathf.Sin(elapsed) * 0.05f, transform.position.y, transform.position.z);
+                transform.position = new Vector3(transform.position.x + Mathf.Sin(elapsed) * 0.03f, transform.position.y, transform.position.z);
 				break;
 		}
 	}
