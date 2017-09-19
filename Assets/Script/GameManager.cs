@@ -158,7 +158,7 @@ public class GameManager : MonoBehaviour
 			}
 		}
 
-		if (Input.GetKeyDown(KeyCode.X))
+		if (Input.GetKeyDown(KeyCode.M))
 		{
             if (!tapInverseStart)
 			{
@@ -191,7 +191,7 @@ public class GameManager : MonoBehaviour
 
 		if (isReset)
 		{
-			if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.X))
+			if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.M))
 			{
                 audioSource[1].PlayOneShot(audioSource[1].clip);
 				SceneManager.LoadScene(SceneManager.GetActiveScene().name);

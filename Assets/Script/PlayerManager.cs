@@ -171,6 +171,11 @@ public class PlayerManager : MonoBehaviour
         if (!inverse) blockCounter.GetComponent<BoxCollider2D>().enabled = true;
     }
 
+    public void SetKey()
+    {
+        jumpKey = KeyCode.M;
+    }
+
 	//死亡時の処理
 	//DeadManager.csから呼ばれる
 	public void Dead()
