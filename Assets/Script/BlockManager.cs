@@ -50,6 +50,8 @@ public class BlockManager : MonoBehaviour
 					GameObject obj = Instantiate(effectObject, transform.position, transform.rotation) as GameObject;
 					Destroy(obj, 4.0f);
 
+                    GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
+
 					GameObject.Find("Background_Change").GetComponent<BackgroundManager>().ChangeSprite();
 				}
             }
@@ -60,7 +62,7 @@ public class BlockManager : MonoBehaviour
 
                 if (blockStatus.Equals(BlockStatus.Flag))
                 {
-                    Vector3 targetPos = transform.Find("Target").transform.position;
+                    Vector3 targetPos = transform.FindChild("Target").transform.position;
 
                     for (int i = 0; i < 3; ++i)
                     {

@@ -59,6 +59,8 @@ public class PlayerManager : MonoBehaviour
     private Vector2 defaultVelocity;
     private Vector3 defaultAngle;
 
+    private int animationCount = 0;
+
     private void Start()
     {
         //キャラクターの物理挙動取得
@@ -135,7 +137,7 @@ public class PlayerManager : MonoBehaviour
 		if (col.gameObject.tag.Equals("Player"))
 		{
 			speed = 0;
-			playerStatus = PlayerStatus.Stand;
+			//playerStatus = PlayerStatus.Stand;
             audioSource.PlayOneShot(clips[3]);
 			StartCoroutine(WaitForStand());
 
@@ -197,7 +199,7 @@ public class PlayerManager : MonoBehaviour
     //ジャンプキーを押した時の処理
     private void Jump()
     {
-        if (playerStatus.Equals(PlayerStatus.Stand))
+        if (playerStatus.Equals(PlayerStatus.Stand) && !isJump)
         {
             StartCoroutine(WaitForJump());
         }
@@ -258,7 +260,23 @@ public class PlayerManager : MonoBehaviour
             switch (playerStatus)
             {
                 case PlayerStatus.Stand:
+                    ++animationCount;
                     rb.velocity = new Vector2(0, rb.velocity.y);
+                    if (40 < animationCount && spriteRenderer.sprite.Equals(sprite[0]))
+                    {
+                        animationCount = 0;
+                        spriteRenderer.sprite = sprite[5];
+                    }
+                    else if(40 < animationCount && spriteRenderer.sprite.Equals(sprite[5]))
+                    {
+                        animationCount = 0;
+                        spriteRenderer.sprite = sprite[0];
+                    }
+                    else if(spriteRenderer.sprite.Equals(sprite[2]))
+                    {
+                        spriteRenderer.sprite = sprite[0];
+                        animationCount = 0;
+                    }
                     break;
                 case PlayerStatus.Charge:
                     rb.velocity = new Vector2(0, rb.velocity.y);
@@ -275,7 +293,7 @@ public class PlayerManager : MonoBehaviour
                     float dis = transform.position.x - anotherPlayer.position.x;
                     if (0 < speed)
                     {
-                        speed -= (deceleration + (dis * 0.07f));
+                        speed -= (deceleration + (dis * 0.05f));
                     }
                     break;
                 case PlayerStatus.Dead:
@@ -302,7 +320,7 @@ public class PlayerManager : MonoBehaviour
         }
         else if(playerStatus.Equals(PlayerStatus.Release))
         {
-            speed = maxSpeed * 0.5f;
+            speed = maxSpeed * 0.1f;
         }
         isJump = true;
 		spriteRenderer.sprite = sprite[1];
@@ -312,7 +330,9 @@ public class PlayerManager : MonoBehaviour
 	{
 		spriteRenderer.sprite = sprite[3];
 		yield return new WaitForSeconds(0.25f);
-        if(!playerState.Equals(PlayerStatus.Dead) || !playerState.Equals(PlayerStatus.End))spriteRenderer.sprite = sprite[0];
+        playerStatus = PlayerStatus.Stand;
+        if(spriteRenderer.sprite.Equals(sprite[3]))spriteRenderer.sprite = sprite[0];
+        //if(!playerState.Equals(PlayerStatus.Dead) || !playerState.Equals(PlayerStatus.End))spriteRenderer.sprite = sprite[0];
 	}
     //死亡後の溜め
 	IEnumerator WaitForDead()
