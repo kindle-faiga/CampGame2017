@@ -60,7 +60,7 @@ public class BlockManager : MonoBehaviour
 
                 if (blockStatus.Equals(BlockStatus.Flag))
                 {
-                    Vector3 targetPos = transform.FindChild("Target").transform.position;
+                    Vector3 targetPos = transform.Find("Target").transform.position;
 
                     for (int i = 0; i < 3; ++i)
                     {
