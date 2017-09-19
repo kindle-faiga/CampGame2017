@@ -293,7 +293,7 @@ public class PlayerManager : MonoBehaviour
                     float dis = transform.position.x - anotherPlayer.position.x;
                     if (0 < speed)
                     {
-                        speed -= (deceleration + (dis * 0.05f));
+                        speed -= (deceleration + (dis * 0.025f));
                     }
                     break;
                 case PlayerStatus.Dead:

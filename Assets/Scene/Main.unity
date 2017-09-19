@@ -3596,8 +3596,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 709675039}
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: 0, y: 0.3, z: 0}
-  m_LocalScale: {x: 0.41424, y: 0.37532023, z: 1}
+  m_LocalPosition: {x: 0, y: 0.16, z: 0}
+  m_LocalScale: {x: 0.41, y: 0.38, z: 1}
   m_Children: []
   m_Father: {fileID: 1000318128}
   m_RootOrder: 1
@@ -4918,7 +4918,7 @@ Transform:
   m_GameObject: {fileID: 1043921967}
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: 0, y: -0.09, z: 0}
-  m_LocalScale: {x: 0.41529, y: 0.39136395, z: 1}
+  m_LocalScale: {x: 0.41, y: 0.38, z: 1}
   m_Children: []
   m_Father: {fileID: 1000318128}
   m_RootOrder: 0
@@ -5885,6 +5885,7 @@ MonoBehaviour:
   sprites:
   - {fileID: 21300000, guid: c72e0031d937844b4b5f9b193f888dc9, type: 3}
   - {fileID: 21300000, guid: 588cc7efac8104ef0ae71e119218bcdc, type: 3}
+  - {fileID: 21300000, guid: 5879ae3bd71064f338b488e747fde8d1, type: 3}
 --- !u!1 &1206165099
 GameObject:
   m_ObjectHideFlags: 0
@@ -10133,6 +10134,36 @@ Prefab:
     - target: {fileID: 4527081250425440, guid: 5938bf1520012f34e835820105d02bbf, type: 2}
       propertyPath: m_RootOrder
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 212354162098832686, guid: 5938bf1520012f34e835820105d02bbf,
+        type: 2}
+      propertyPath: m_SortingOrder
+      value: -9997
+      objectReference: {fileID: 0}
+    - target: {fileID: 212258323871031124, guid: 5938bf1520012f34e835820105d02bbf,
+        type: 2}
+      propertyPath: m_SortingOrder
+      value: -9997
+      objectReference: {fileID: 0}
+    - target: {fileID: 212156213289089780, guid: 5938bf1520012f34e835820105d02bbf,
+        type: 2}
+      propertyPath: m_SortingOrder
+      value: -9997
+      objectReference: {fileID: 0}
+    - target: {fileID: 212875443933273120, guid: 5938bf1520012f34e835820105d02bbf,
+        type: 2}
+      propertyPath: m_SortingOrder
+      value: -9997
+      objectReference: {fileID: 0}
+    - target: {fileID: 212364085130486876, guid: 5938bf1520012f34e835820105d02bbf,
+        type: 2}
+      propertyPath: m_SortingOrder
+      value: -9997
+      objectReference: {fileID: 0}
+    - target: {fileID: 212350713355607364, guid: 5938bf1520012f34e835820105d02bbf,
+        type: 2}
+      propertyPath: m_SortingOrder
+      value: -9997
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5938bf1520012f34e835820105d02bbf, type: 2}
